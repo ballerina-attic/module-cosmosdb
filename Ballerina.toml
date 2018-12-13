@@ -1,0 +1,7 @@
+[project]
+org-name = "wso2"
+version = "0.8.1"
+authors = ["WSO2"]
+keywords = ["azure", "cosmosdb"]
+repository = "https://github.com/wso2-ballerina/module-cosmosdb"
+license = "Apache-2.0"
