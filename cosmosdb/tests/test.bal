@@ -17,8 +17,6 @@
 import ballerina/config;
 import ballerina/io;
 import ballerina/test;
-import ballerina/log;
-import ballerina/http;
 
 CosmosDBConfiguration cosmosDBConfig = {
     baseURL: config:getAsString("BASE_URL"),
@@ -70,7 +68,7 @@ function testListDatabases() {
 
 @test:Config {
     dependsOn: ["testCreateDatabase", "testGetDatabase", "testListDatabases", "testListCollections",
-                "testDeleteCollection", "testDeleteDocument"]
+    "testDeleteCollection", "testDeleteDocument"]
 }
 function testDeleteDatabase() {
     io:println("-----------------Test case for deleteDatabase method------------------");
@@ -189,8 +187,8 @@ function testCreateDocument() {
 }
 function testListDocuments() {
     io:println("-----------------Test case for listDocuments method------------------");
-    DocumentListOptions documentListOptions = {maxItemCount:2};
-    var dbRes = cosmosdbClient->listDocuments(databaseID,collectionID, documentListOptions = documentListOptions);
+    DocumentListOptions documentListOptions = { maxItemCount: 2 };
+    var dbRes = cosmosdbClient->listDocuments(databaseID, collectionID, documentListOptions = documentListOptions);
     if (dbRes is DocumentListResponse) {
         test:assertNotEquals(dbRes.documents, null, msg = "Failed to list documents");
     } else {

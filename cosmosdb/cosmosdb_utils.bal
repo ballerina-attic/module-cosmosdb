@@ -21,15 +21,13 @@ import ballerina/http;
 import ballerina/crypto;
 import ballerina/system;
 
-string dateString = "";
-
 function costructRequestHeaders(http:Request request, string httpMethod, string resourceType, string resourceLink,
                                 string masterKey, string contentType, RequestOptions? requestOptions = ()) returns error
                                                                                                                    ? {
     time:Time time = time:currentTime();
     time:Timezone zoneValue = { zoneId: "GMT" };
     time:Time standardTime = new(time.time, zoneValue);
-    dateString = standardTime.format(DATE_TIME_FORMAT);
+    string dateString = standardTime.format(DATE_TIME_FORMAT);
 
     string stringToSign = httpMethod.toLower() + NEW_LINE + resourceType.toLower() + NEW_LINE + resourceLink
         + NEW_LINE + dateString.toLower() + NEW_LINE + EMPTY_STRING + NEW_LINE;
@@ -37,10 +35,10 @@ function costructRequestHeaders(http:Request request, string httpMethod, string 
         crypto:SHA256).base16ToBase64Encode();
     string authHeaderString = check http:encode("type=" + MASTER_TOKEN + "&ver=" + TOKEN_VERSION + "&sig=" + signature,
         "UTF-8");
-    request.setHeader("Authorization", authHeaderString);
-    request.setHeader("x-ms-version", X_MS_VERSION);
-    request.setHeader("x-ms-date", dateString);
-    request.setHeader("content-type", contentType);
+    request.setHeader(AUTHORIZATION, authHeaderString);
+    request.setHeader(VERSION, X_MS_VERSION);
+    request.setHeader(X_DATE, dateString);
+    request.setHeader(CONTENT_TYPE, contentType);
     if (requestOptions != ()) {
         var requestHeaders = setOptionalHeaders(request, requestOptions = requestOptions);
         if (requestHeaders is error) {

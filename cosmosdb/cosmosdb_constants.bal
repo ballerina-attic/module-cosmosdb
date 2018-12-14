@@ -53,6 +53,8 @@ final string PARTITION_KEY = "x-ms-documentdb-partitionkey";
 final string PARTITION_KEY_RANGE_ID = "x-ms-documentdb-partitionkeyrangeid";
 final string MAX_ITEM_COUNT = "x-ms-max-item-count";
 final string IS_QUERY = "x-ms-documentdb-isquery";
+final string CONTENT_TYPE = "content-type";
+final string AUTHORIZATION = "Authorization";
 
 
 public const INCLUDE = "Include";
