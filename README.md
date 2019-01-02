@@ -14,30 +14,29 @@ The following sections provide you with information on how to use the Ballerina 
 |  0.990.0                    |   2017-02-22                   |
 
 ##### Prerequisites
-Download the ballerina [distribution](https://ballerina.io/downloads/).
+Download the Ballerina [distribution](https://ballerina.io/downloads/).
 
 ##### Contribute To Develop
-Clone the repository by running the following command
+Clone the repository by running the following command:
 `git clone https://github.com/wso2-ballerina/module-cosmosdb.git`
 
 ## Working with CosmosDB Endpoint Remote Functions
-All the actions return valid response or error. If the action is a success, then the requested resource will
-be returned. Else error will be returned.
+All the remote functions return valid responses or errors. If the remote function is a success, then the requested resource is returned. Alternatively, error is returned.
 
-In order for you to use the CosmosDB Endpoint, first you need to create a CosmosDB Client endpoint.
+Create a CosmosDB Client endpoint to use the CosmosDB Endpoint.
 
 ```ballerina
 import wso2/cosmosdb;
 
-CosmosDBConfiguration cosmosDBConfig = {
+cosmosdb:CosmosDBConfiguration cosmosDBConfig = {
     baseURL: <your_account_base_url>,
     masterKey: <your_account_master_key>
 };
 
-Client c = new(cosmosDBConfig);
+cosmosdb:Client c = new(cosmosDBConfig);
 ```
 
-Then the endpoint remote functions can be invoked as `var response = cosmosDB->functionName(arguments)`.
+The endpoint remote functions can be invoked using `var response = cosmosDB->functionName(arguments)`.
 
 #### Sample
 ```ballerina
@@ -46,18 +45,21 @@ import ballerina/io;
 import wso2/cosmosdb;
 
 public function main() {
+    // CosmosDB configuration
     cosmosdb:CosmosDBConfiguration cosmosDBConfig = {
         baseURL: config:getAsString("BASE_URL"),
         masterKey: config:getAsString("MASTER_KEY")
     };
 
+    // Create the CosmosDB client.
     cosmosdb:Client cosmosdbClient = new(cosmosDBConfig);
 
+    // Invoke createDatabase function.
     var dbRes = cosmosdbClient->createDatabase(databaseID);
     if (dbRes is cosmosdb:DatabaseResponse) {
         io:println(dbRes);
     } else {
-        //Error will be printed
+        //Error is printed.
         io:println(dbRes);
     }
 }

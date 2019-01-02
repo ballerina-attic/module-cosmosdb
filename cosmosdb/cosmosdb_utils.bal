@@ -22,8 +22,7 @@ import ballerina/crypto;
 import ballerina/system;
 
 function costructRequestHeaders(http:Request request, string httpMethod, string resourceType, string resourceLink,
-                                string masterKey, string contentType, RequestOptions? requestOptions = ()) returns error
-                                                                                                                   ? {
+                        string masterKey, string contentType, RequestOptions? requestOptions = ()) returns error? {
     time:Time time = time:currentTime();
     time:Timezone zoneValue = { zoneId: "GMT" };
     time:Time standardTime = new(time.time, zoneValue);
@@ -40,17 +39,12 @@ function costructRequestHeaders(http:Request request, string httpMethod, string 
     request.setHeader(X_DATE, dateString);
     request.setHeader(CONTENT_TYPE, contentType);
     if (requestOptions != ()) {
-        var requestHeaders = setOptionalHeaders(request, requestOptions = requestOptions);
-        if (requestHeaders is error) {
-            error err = error(COSMOS_DB_ERROR_CODE,
-            { message: "Error occurred while constructing request optional headers" });
-            return err;
-        }
+        setOptionalHeaders(request, requestOptions = requestOptions);
     }
     return ();
 }
 
-function setOptionalHeaders(http:Request request, RequestOptions? requestOptions = ()) returns error? {
+function setOptionalHeaders(http:Request request, RequestOptions? requestOptions = ()) {
     string sessionToken = requestOptions["sessionToken"] ?: "";
     if (sessionToken != "") {
         request.setHeader(SESSION_TOKEN, sessionToken);
@@ -75,7 +69,6 @@ function setOptionalHeaders(http:Request request, RequestOptions? requestOptions
     if (pageSize != -1) {
         request.setHeader(PAGE_SIZE, <string>pageSize);
     }
-    return ();
 }
 
 function extractResponseHeaders(http:Response httpResponse) returns ResourceResponse {

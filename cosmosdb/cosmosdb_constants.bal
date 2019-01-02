@@ -53,10 +53,14 @@ final string PARTITION_KEY = "x-ms-documentdb-partitionkey";
 final string PARTITION_KEY_RANGE_ID = "x-ms-documentdb-partitionkeyrangeid";
 final string MAX_ITEM_COUNT = "x-ms-max-item-count";
 final string IS_QUERY = "x-ms-documentdb-isquery";
+final string IS_UPSERT = "x-ms-documentdb-is-upsert";
 final string CONTENT_TYPE = "content-type";
 final string AUTHORIZATION = "Authorization";
+final string OFFER_THROUGHPUT = "x-ms-offer-throughput";
+final string OFFER_TYPE = "x-ms-offer-type";
+final string INDEXING_DIRECTIVE = "x-ms-indexing-directive";
 
 
 public const INCLUDE = "Include";
 public const EXCLUDE = "Exclude";
-public type INDEXING_DIRECTIVE "Include"|"Exclude";
+public type INDEXING_DIRECTIVE_TYPE "Include"|"Exclude";

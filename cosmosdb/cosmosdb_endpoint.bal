@@ -312,10 +312,10 @@ remote function Client.createCollection(string databaseId, string collectionId,
         //Set collection specific headers.
         if (collectionCreateOptions != ()) {
             if (collectionCreateOptions.offerThroughput != ()) {
-                request.setHeader("x-ms-offer-throughput", <string>collectionCreateOptions.offerThroughput);
+                request.setHeader(OFFER_THROUGHPUT, <string>collectionCreateOptions.offerThroughput);
             }
             if (collectionCreateOptions.offerType != ()) {
-                request.setHeader("x-ms-offer-type", <string>collectionCreateOptions.offerType);
+                request.setHeader(OFFER_TYPE, <string>collectionCreateOptions.offerType);
             }
         }
         var httpResponse = self.documentClient->post(requestPath, request);
@@ -468,10 +468,10 @@ remote function Client.createDocument(string databaseId, string collectionId, st
         //Set collection specific headers.
         if (documentCreateOptions != ()) {
             if (documentCreateOptions.isDocumentUpsert != ()) {
-                request.setHeader("x-ms-documentdb-is-upsert", <string>documentCreateOptions.isDocumentUpsert);
+                request.setHeader(IS_UPSERT, <string>documentCreateOptions.isDocumentUpsert);
             }
             if (documentCreateOptions.indexingDirective != ()) {
-                request.setHeader("x-ms-indexing-directive", <string>documentCreateOptions.indexingDirective);
+                request.setHeader(INDEXING_DIRECTIVE, <string>documentCreateOptions.indexingDirective);
             }
         }
         var httpResponse = self.documentClient->post(requestPath, request);
