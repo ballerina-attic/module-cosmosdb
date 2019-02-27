@@ -2,7 +2,7 @@
 
 | Ballerina Language Version  | Azure Cosmos DB API Version    |
 | ----------------------------| -------------------------------|
-|  0.990.0                    |   2017-02-22                   |
+|  0.990.3                    |   2017-02-22                   |
 
 ### Prerequisites
 

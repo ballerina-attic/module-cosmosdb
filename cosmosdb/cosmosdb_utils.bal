@@ -1,5 +1,4 @@
-//
-// Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+// Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 //
 // WSO2 Inc. licenses this file to you under the Apache License,
 // Version 2.0 (the "License"); you may not use this file except
@@ -14,59 +13,57 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
 
-import ballerina/time;
-import ballerina/http;
 import ballerina/crypto;
+import ballerina/encoding;
+import ballerina/http;
 import ballerina/system;
+import ballerina/time;
 
 function costructRequestHeaders(http:Request request, string httpMethod, string resourceType, string resourceLink,
                         string masterKey, string contentType, RequestOptions? requestOptions = ()) returns error? {
     time:Time time = time:currentTime();
-    time:Timezone zoneValue = { zoneId: "GMT" };
-    time:Time standardTime = new(time.time, zoneValue);
-    string dateString = standardTime.format(DATE_TIME_FORMAT);
+    time:Time standardTime = time:toTimeZone(time, "GMT");
+    string dateString = time:format(standardTime, DATE_TIME_FORMAT);
 
-    string stringToSign = httpMethod.toLower() + NEW_LINE + resourceType.toLower() + NEW_LINE + resourceLink
-        + NEW_LINE + dateString.toLower() + NEW_LINE + EMPTY_STRING + NEW_LINE;
-    string signature = crypto:hmac(stringToSign, masterKey, keyEncoding = crypto:BASE64,
-        crypto:SHA256).base16ToBase64Encode();
-    string authHeaderString = check http:encode("type=" + MASTER_TOKEN + "&ver=" + TOKEN_VERSION + "&sig=" + signature,
+    string stringToSign = string `{{httpMethod.toLower()}}{{NEW_LINE}}{{resourceType.toLower()}}
+        {{NEW_LINE}}{{resourceLink}}{{NEW_LINE}}{{dateString.toLower()}}{{NEW_LINE}}{{EMPTY_STRING}}{{NEW_LINE}}`;
+    byte[] key = check encoding:decodeBase64(masterKey);
+    string signature = encoding:encodeBase64(crypto:hmacSha256(stringToSign.toByteArray("UTF-8"), key));
+
+    string authHeaderString = check http:encode(string `type={{MASTER_TOKEN}}&ver={{TOKEN_VERSION}}&sig={{signature}}`,
         "UTF-8");
     request.setHeader(AUTHORIZATION, authHeaderString);
     request.setHeader(VERSION, X_MS_VERSION);
     request.setHeader(X_DATE, dateString);
     request.setHeader(CONTENT_TYPE, contentType);
-    if (requestOptions != ()) {
-        setOptionalHeaders(request, requestOptions = requestOptions);
-    }
+    setOptionalHeaders(request, requestOptions = requestOptions);
     return ();
 }
 
 function setOptionalHeaders(http:Request request, RequestOptions? requestOptions = ()) {
-    string sessionToken = requestOptions["sessionToken"] ?: "";
-    if (sessionToken != "") {
+    string? sessionToken = requestOptions["sessionToken"];
+    if (sessionToken is string) {
         request.setHeader(SESSION_TOKEN, sessionToken);
     }
 
-    string consistencyLevel = requestOptions["consistencyLevel"] ?: "";
-    if (consistencyLevel != "") {
+    string? consistencyLevel = requestOptions["consistencyLevel"];
+    if (consistencyLevel is string) {
         request.setHeader(CONSISTENCY_LEVEL, consistencyLevel);
     }
 
-    string continuationToken = requestOptions["continuationToken"] ?: "";
-    if (continuationToken != "") {
+    string? continuationToken = requestOptions["continuationToken"];
+    if (continuationToken is string) {
         request.setHeader(CONTINUATION, continuationToken);
     }
 
-    int partitionKeyRangeId = requestOptions["partitionKeyRangeId"] ?: 0;
-    if (partitionKeyRangeId != 0) {
+    int? partitionKeyRangeId = requestOptions["partitionKeyRangeId"];
+    if (partitionKeyRangeId is int) {
         request.setHeader(PARTITION_KEY_RANGE_ID, <string>partitionKeyRangeId);
     }
 
-    int pageSize = requestOptions["pageSize"] ?: -1;
-    if (pageSize != -1) {
+    int? pageSize = requestOptions["pageSize"];
+    if (pageSize is int) {
         request.setHeader(PAGE_SIZE, <string>pageSize);
     }
 }
@@ -88,8 +85,8 @@ function extractResponseHeaders(http:Response httpResponse) returns ResourceResp
     return resourceResponse;
 }
 
-function setResponseError(json jsonResponse) returns error {
-    error err = error(COSMOS_DB_ERROR_CODE, { message: jsonResponse.message.toString() });
+function setResponseError(string errorMessage) returns error {
+    error err = error(COSMOS_DB_ERROR_CODE, { message: errorMessage });
     return err;
 }
 
@@ -100,20 +97,17 @@ function generatePayload(string queryString, any... parameters) returns json|err
     if (parameters.length() != 0) {
         foreach var param in parameters {
             string id = system:uuid();
-            json jsonParam = {"name" : id};
+            json jsonParam = { "name" : id };
             var jsonVal = json.convert(param);
             if (jsonVal is json) {
                 jsonParam.value = jsonVal;
             } else {
-                error err = error(COSMOS_DB_ERROR_CODE,
-                { message: "Error occurred while converting the value as json" });
-                return err;
+                return setResponseError(JSON_CONVERSION_ERROR_MSG);
             }
             generatedQuery = generatedQuery.replaceFirst("[?]+", "@" + id);
             jsonParameters[i] = jsonParam;
             i = i + 1;
         }
     }
-    json jsonPayload = {"query" : generatedQuery, "parameters" : jsonParameters};
-    return {"query" : generatedQuery, "parameters" : jsonParameters};
+    return { "query" : generatedQuery, "parameters" : jsonParameters };
 }

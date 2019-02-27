@@ -1,4 +1,4 @@
-// Copyright (c) 2018 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+// Copyright (c) 2019 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 //
 // WSO2 Inc. licenses this file to you under the Apache License,
 // Version 2.0 (the "License"); you may not use this file except
@@ -35,6 +35,7 @@ function testCreateDatabase() {
     if (dbRes is DatabaseResponse) {
         test:assertNotEquals(dbRes.database.id, null, msg = "Failed to create database");
     } else {
+        io:println(<string>dbRes.detail().message);
         test:assertFail(msg = <string>dbRes.detail().message);
     }
 }

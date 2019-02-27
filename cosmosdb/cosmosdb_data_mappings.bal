@@ -1,4 +1,4 @@
-// Copyright (c) 2018 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+// Copyright (c) 2019 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 //
 // WSO2 Inc. licenses this file to you under the Apache License,
 // Version 2.0 (the "License"); you may not use this file except
@@ -15,24 +15,21 @@
 // under the License.
 
 function convertToDatabaseResponse(json jsonResponse) returns DatabaseResponse {
-    DatabaseResponse databaseResponse = {};
-    databaseResponse.database = convertToDatabase(jsonResponse);
+    DatabaseResponse databaseResponse = { database: convertToDatabase(jsonResponse) };
     return databaseResponse;
 }
 
 function convertToDatabase(json jsonResponse) returns Database {
-    Database database = {};
-    database.id = jsonResponse.id.toString();
-    database.rid = jsonResponse._rid.toString();
+    Database database = { id: jsonResponse.id.toString(), rid: jsonResponse._rid.toString() };
     return database;
 }
 
 function convertToDatabaseListResponse(json jsonResponse) returns DatabaseListResponse {
     DatabaseListResponse databaseListResponse = {};
-    if (jsonResponse.Databases != ()) {
-        json[] jsonDatabases = <json[]>jsonResponse.Databases;
+    var databases = jsonResponse.Databases;
+    if (databases is json[]) {
         int i = 0;
-        foreach json jsonDatabase in jsonDatabases {
+        foreach json jsonDatabase in databases {
             databaseListResponse.databases[i] = convertToDatabase(jsonDatabase);
             i = i + 1;
         }
@@ -41,25 +38,21 @@ function convertToDatabaseListResponse(json jsonResponse) returns DatabaseListRe
 }
 
 function convertToCollectionResponse(json jsonResponse) returns CollectionResponse {
-    CollectionResponse collectionResponse = {};
-    collectionResponse.collection = convertToDatabase(jsonResponse);
+    CollectionResponse collectionResponse = { collection: convertToDatabase(jsonResponse) };
     return collectionResponse;
 }
 
 function convertToCollection(json jsonResponse) returns Collection {
-    Collection collection = {};
-    collection.id = jsonResponse.id.toString();
-    collection.rid = jsonResponse._rid.toString();
+    Collection collection = { id: jsonResponse.id.toString(), rid: jsonResponse._rid.toString()};
     return collection;
 }
 
 function convertToDocumentCollectionsResponse(json jsonResponse) returns DocumentCollectionsResponse {
-    DocumentCollectionsResponse documentCollectionsResponse = {};
-    documentCollectionsResponse.count = <int>jsonResponse._count;
-    if (jsonResponse.DocumentCollections != ()) {
-        json[] jsonDocumentCollections = <json[]>jsonResponse.DocumentCollections;
+    DocumentCollectionsResponse documentCollectionsResponse = {count : <int>jsonResponse._count};
+    var documentCollections = jsonResponse.DocumentCollections;
+    if (documentCollections is json[]) {
         int i = 0;
-        foreach json jsonCollection in jsonDocumentCollections {
+        foreach json jsonCollection in documentCollections {
             documentCollectionsResponse.documentCollections[i] = convertToCollection(jsonCollection);
             i = i + 1;
         }
@@ -68,10 +61,8 @@ function convertToDocumentCollectionsResponse(json jsonResponse) returns Documen
 }
 
 function convertToDocument(json jsonResponse) returns Document {
-    Document document = {};
-    document.id = jsonResponse.id.toString();
-    document.rid = jsonResponse._rid.toString();
-    document.etag = jsonResponse._etag.toString();
+    Document document = { id: jsonResponse.id.toString(), rid: jsonResponse._rid.toString(),
+        etag: jsonResponse._etag.toString()};
     json jsonContent = getJSONContent(jsonResponse);
     document.content =  jsonContent.length() != 0 ? jsonContent : ();
     return document;
@@ -89,10 +80,10 @@ function getJSONContent(json jsonResponse) returns json {
 
 function convertToDocumentListResponse(json jsonResponse) returns DocumentListResponse {
     DocumentListResponse documentListResponse = {};
-    if (jsonResponse.Documents != ()) {
-        json[] jsonDocuments = <json[]>jsonResponse.Documents;
+    var documents = jsonResponse.Documents;
+    if (documents is json[]) {
         int i = 0;
-        foreach json jsonDocument in jsonDocuments {
+        foreach json jsonDocument in documents {
             documentListResponse.documents[i] = convertToDocument(jsonDocument);
             i = i + 1;
         }

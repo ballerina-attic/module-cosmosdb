@@ -1,5 +1,4 @@
-//
-// Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+// Copyright (c) 2019 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 //
 // WSO2 Inc. licenses this file to you under the Apache License,
 // Version 2.0 (the "License"); you may not use this file except
@@ -14,7 +13,6 @@
 // KIND, either express or implied.  See the License for the
 // specific language governing permissions and limitations
 // under the License.
-//
 
 public type RequestOptions record {
     string consistencyLevel?;
@@ -41,8 +39,8 @@ public type DatabaseResponse record {
 };
 
 public type Database record {
-    string id = "";
-    string rid = "";
+    string id?;
+    string rid?;
 };
 
 public type DatabaseListResponse record {
@@ -79,8 +77,8 @@ public type DocumentCreateOptions record {
 };
 
 public type Collection record {
-    string id = "";
-    string rid = "";
+    string id?;
+    string rid?;
 };
 
 public type Document record {

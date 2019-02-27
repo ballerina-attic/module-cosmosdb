@@ -12,17 +12,15 @@ The `wso2/cosmosdb` module contains operations that create, retrieve, or delete 
 
 |                             |       Version               |
 |:---------------------------:|:---------------------------:|
-| Ballerina Language          | 0.990.0                     |
+| Ballerina Language          | 0.990.3                     |
 | Azure Cosmos DB API Version | 2017-02-22                  |
 
 ## Sample
 
 Import the `wso2/cosmosdb` module into the Ballerina project.
-
 ```ballerina
 import wso2/cosmosdb;
 ```
-
 Azure Cosmos DB connector can be instantiated using the account base URL and master key of your account in the CosmosDB configuration.
 You can obtain the master key using following steps:
 
@@ -31,7 +29,6 @@ You can obtain the master key using following steps:
 
 You can now enter the credentials in the HTTP client config:
 ```ballerina
-
 cosmosdb:CosmosDBConfiguration cosmosDBConfig = {
     baseURL: <your_db_account_base_url>,
     masterKey: <your_account_master_key>
@@ -39,20 +36,17 @@ cosmosdb:CosmosDBConfiguration cosmosDBConfig = {
 
 cosmosdb:Client cosmosdbClient = new(cosmosDBConfig);
 ```
-
-
 The `createDatabase` function creates a new database with the given name.
 ```ballerina
-//Create a database.
+// Create a database.
 var response = cosmosdbClient->createDatabase(databaseId);
 ```
-
-The response from `createDatabase` is a `DatabaseResponse` object if the request was successful or a `error` on failure.
+The response from `createDatabase` is a `DatabaseResponse` object if the request was successful or an `error` on failure.
 ```ballerina
 if (dbRes is cosmosdb:DatabaseResponse) {
         io:println(dbRes);
     } else {
-        //Error will be printed
-        io:println(dbRes);
+        // Error will be printed.
+        io:println("Error: ", dbRes);
     }
 ```
