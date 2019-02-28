@@ -48,7 +48,7 @@ function convertToCollection(json jsonResponse) returns Collection {
 }
 
 function convertToDocumentCollectionsResponse(json jsonResponse) returns DocumentCollectionsResponse {
-    DocumentCollectionsResponse documentCollectionsResponse = {count : <int>jsonResponse._count};
+    DocumentCollectionsResponse documentCollectionsResponse = { count : <int>jsonResponse._count };
     var documentCollections = jsonResponse.DocumentCollections;
     if (documentCollections is json[]) {
         int i = 0;
@@ -62,9 +62,9 @@ function convertToDocumentCollectionsResponse(json jsonResponse) returns Documen
 
 function convertToDocument(json jsonResponse) returns Document {
     Document document = { id: jsonResponse.id.toString(), rid: jsonResponse._rid.toString(),
-        etag: jsonResponse._etag.toString()};
+        etag: jsonResponse._etag.toString() };
     json jsonContent = getJSONContent(jsonResponse);
-    document.content =  jsonContent.length() != 0 ? jsonContent : ();
+    document.content = jsonContent.length() != 0 ? jsonContent : ();
     return document;
 }
 
