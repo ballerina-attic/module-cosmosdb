@@ -17,8 +17,6 @@
 const string DB_PATH = "dbs";
 const string COLL_PATH = "colls";
 const string DOC_PATH = "docs";
-
-
 const string MASTER_TOKEN = "master";
 const string TOKEN_VERSION = "1.0";
 const string X_MS_VERSION = "2017-02-22";
@@ -27,7 +25,7 @@ const string DATE_TIME_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
 const string JSON_CONTENT_TYPE = "application/json";
 const string QUERY_JSON_CONTENT_TYPE = "application/query+json";
 
-//Symbols
+// Symbols
 const string NEW_LINE = "\n";
 const string SLASH = "/";
 const string EMPTY_STRING = "";
@@ -40,7 +38,7 @@ const string JSON_CONVERSION_ERROR_MSG = "Error occurred while converting the va
 const string API_INVOCATION_ERROR_MSG = "Error occurred while invoking the REST API";
 const string ENCODING_ERROR_MSG = "Error occurred while encoding parameters when constructing request headers";
 
-//Headers
+// Headers
 const string ETAG = "etag";
 const string SESSION_TOKEN = "x-ms-session-token";
 const string ACTIVITY_ID = "x-ms-activity-id";
@@ -64,7 +62,6 @@ const string AUTHORIZATION = "Authorization";
 const string OFFER_THROUGHPUT = "x-ms-offer-throughput";
 const string OFFER_TYPE = "x-ms-offer-type";
 const string INDEXING_DIRECTIVE = "x-ms-indexing-directive";
-
 
 public const INCLUDE = "Include";
 public const EXCLUDE = "Exclude";

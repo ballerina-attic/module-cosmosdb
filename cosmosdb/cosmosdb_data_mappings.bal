@@ -43,7 +43,7 @@ function convertToCollectionResponse(json jsonResponse) returns CollectionRespon
 }
 
 function convertToCollection(json jsonResponse) returns Collection {
-    Collection collection = { id: jsonResponse.id.toString(), rid: jsonResponse._rid.toString()};
+    Collection collection = { id: jsonResponse.id.toString(), rid: jsonResponse._rid.toString() };
     return collection;
 }
 

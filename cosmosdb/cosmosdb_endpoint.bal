@@ -170,7 +170,7 @@ public remote function Client.listDatabases(RequestOptions? requestOptions = ())
     var requestHeaders = costructRequestHeaders(request, "get", DB_PATH, EMPTY_STRING, self.masterKey,
         JSON_CONTENT_TYPE, requestOptions = requestOptions);
     if (requestHeaders is error) {
-        return setResponseError(ENCODING_ERROR_MSG);
+        return setResponseError(HEADER_CONST_ERROR_MSG);
     } else {
         var httpResponse = self.documentClient->get(requestPath, message = request);
         if (httpResponse is http:Response) {
@@ -202,9 +202,7 @@ public remote function Client.createDatabase(string databaseId, RequestOptions? 
     var requestHeaders = costructRequestHeaders(request, "post", DB_PATH, EMPTY_STRING, self.masterKey,
         JSON_CONTENT_TYPE, requestOptions = requestOptions);
     if (requestHeaders is error) {
-        error err = error(COSMOS_DB_ERROR_CODE,
-        { message: HEADER_CONST_ERROR_MSG });
-        return err;
+        return setResponseError(HEADER_CONST_ERROR_MSG);
     } else {
         var httpResponse = self.documentClient->post(requestPath, request);
         if (httpResponse is http:Response) {
@@ -235,9 +233,7 @@ public remote function Client.getDatabase(string databaseId, RequestOptions? req
     var requestHeaders = costructRequestHeaders(request, "get", DB_PATH, resourceLink, self.masterKey,
         JSON_CONTENT_TYPE, requestOptions = requestOptions);
     if (requestHeaders is error) {
-        error err = error(COSMOS_DB_ERROR_CODE,
-        { message: HEADER_CONST_ERROR_MSG });
-        return err;
+        return setResponseError(HEADER_CONST_ERROR_MSG);
     } else {
         var httpResponse = self.documentClient->get(requestPath, message = request);
         if (httpResponse is http:Response) {
@@ -268,9 +264,7 @@ public remote function Client.deleteDatabase(string databaseId, RequestOptions? 
     var requestHeaders = costructRequestHeaders(request, "delete", DB_PATH, resourceLink, self.masterKey,
         JSON_CONTENT_TYPE, requestOptions = requestOptions);
     if (requestHeaders is error) {
-        error err = error(COSMOS_DB_ERROR_CODE,
-        { message: HEADER_CONST_ERROR_MSG });
-        return err;
+        return setResponseError(HEADER_CONST_ERROR_MSG);
     } else {
         var httpResponse = self.documentClient->delete(requestPath, request);
         if (httpResponse is http:Response) {
@@ -302,11 +296,9 @@ public remote function Client.createCollection(string databaseId, string collect
     var requestHeaders = costructRequestHeaders(request, "post", COLL_PATH, resourceLink, self.masterKey,
         JSON_CONTENT_TYPE, requestOptions = collectionCreateOptions.requestOptions);
     if (requestHeaders is error) {
-        error err = error(COSMOS_DB_ERROR_CODE,
-        { message: HEADER_CONST_ERROR_MSG });
-        return err;
+        return setResponseError(HEADER_CONST_ERROR_MSG);
     } else {
-        //Set collection specific headers.
+        // Set collection specific headers.
         if (collectionCreateOptions != ()) {
             if (collectionCreateOptions.offerThroughput != ()) {
                 request.setHeader(OFFER_THROUGHPUT, <string>collectionCreateOptions.offerThroughput);
@@ -344,9 +336,7 @@ public remote function Client.listCollections(string databaseId, RequestOptions?
     var requestHeaders = costructRequestHeaders(request, "get", COLL_PATH, resourceLink, self.masterKey,
         JSON_CONTENT_TYPE, requestOptions = requestOptions);
     if (requestHeaders is error) {
-        error err = error(COSMOS_DB_ERROR_CODE,
-        { message: HEADER_CONST_ERROR_MSG });
-        return err;
+        return setResponseError(HEADER_CONST_ERROR_MSG);
     } else {
         var httpResponse = self.documentClient->get(requestPath, message = request);
         if (httpResponse is http:Response) {
@@ -378,9 +368,7 @@ public remote function Client.getCollection(string databaseId, string collection
     var requestHeaders = costructRequestHeaders(request, "get", COLL_PATH, resourceLink, self.masterKey,
         JSON_CONTENT_TYPE, requestOptions = requestOptions);
     if (requestHeaders is error) {
-        error err = error(COSMOS_DB_ERROR_CODE,
-        { message: HEADER_CONST_ERROR_MSG });
-        return err;
+        return setResponseError(HEADER_CONST_ERROR_MSG);
     } else {
         var httpResponse = self.documentClient->get(requestPath, message = request);
         if (httpResponse is http:Response) {
@@ -411,9 +399,7 @@ public remote function Client.deleteCollection(string databaseId, string collect
     var requestHeaders = costructRequestHeaders(request, "delete", COLL_PATH, resourceLink, self.masterKey,
         JSON_CONTENT_TYPE, requestOptions = requestOptions);
     if (requestHeaders is error) {
-        error err = error(COSMOS_DB_ERROR_CODE,
-        { message: "Error occurred while constructing request headers" });
-        return err;
+        return setResponseError(HEADER_CONST_ERROR_MSG);
     } else {
         var httpResponse = self.documentClient->delete(requestPath, request);
         if (httpResponse is http:Response) {
@@ -446,11 +432,9 @@ public remote function Client.createDocument(string databaseId, string collectio
     var requestHeaders = costructRequestHeaders(request, "post", DOC_PATH, resourceLink, self.masterKey,
         JSON_CONTENT_TYPE, requestOptions = documentCreateOptions.requestOptions);
     if (requestHeaders is error) {
-        error err = error(COSMOS_DB_ERROR_CODE,
-        { message: "Error occurred while constructing request headers" });
-        return err;
+        return setResponseError(HEADER_CONST_ERROR_MSG);
     } else {
-        //Set collection specific headers.
+        // Set collection specific headers.
         if (documentCreateOptions != ()) {
             if (documentCreateOptions.isDocumentUpsert != ()) {
                 request.setHeader(IS_UPSERT, <string>documentCreateOptions.isDocumentUpsert);
@@ -495,9 +479,7 @@ public remote function Client.listDocuments(string databaseId, string collection
         var requestHeaders = costructRequestHeaders(request, "get", DOC_PATH, resourceLink, self.masterKey,
             JSON_CONTENT_TYPE, requestOptions = documentListOptions.requestOptions);
         if (requestHeaders is error) {
-            error err = error(COSMOS_DB_ERROR_CODE,
-            { message: "Error occurred while constructing request headers" });
-            return err;
+            return setResponseError(HEADER_CONST_ERROR_MSG);
         } else {
             if (documentListOptions.maxItemCount != ()) {
                 request.setHeader(MAX_ITEM_COUNT, <string>documentListOptions.maxItemCount);
@@ -553,16 +535,14 @@ public remote function Client.queryDocuments(string databaseId, string collectio
         var requestHeaders = costructRequestHeaders(request, "post", DOC_PATH, resourceLink, self.masterKey,
             JSON_CONTENT_TYPE, requestOptions = documentQueryOptions.requestOptions);
         if (requestHeaders is error) {
-            error err = error(COSMOS_DB_ERROR_CODE,
-            { message: "Error occurred while constructing request headers" });
-            return err;
+            return setResponseError(HEADER_CONST_ERROR_MSG);
         } else {
             if (documentQueryOptions.maxItemCount != ()) {
                 request.setHeader(MAX_ITEM_COUNT, <string>documentQueryOptions.maxItemCount);
             }
             request.setHeader(IS_QUERY, "true");
 
-            //Generate query using paramters
+            // Generate query using parameters.
             if (parameters.length() != 0) {
                 int i = 0;
                 foreach var param in parameters {
@@ -620,9 +600,7 @@ public remote function Client.getDocument(string databaseId, string collectionId
     var requestHeaders = costructRequestHeaders(request, "get", DOC_PATH, resourceLink, self.masterKey,
         JSON_CONTENT_TYPE, requestOptions = requestOptions);
     if (requestHeaders is error) {
-        error err = error(COSMOS_DB_ERROR_CODE,
-        { message: HEADER_CONST_ERROR_MSG });
-        return err;
+        return setResponseError(HEADER_CONST_ERROR_MSG);
     } else {
         var httpResponse = self.documentClient->get(requestPath, message = request);
         if (httpResponse is http:Response) {
@@ -657,9 +635,7 @@ public remote function Client.deleteDocument(string databaseId, string collectio
     var requestHeaders = costructRequestHeaders(request, "delete", DOC_PATH, resourceLink, self.masterKey,
         JSON_CONTENT_TYPE, requestOptions = requestOptions);
     if (requestHeaders is error) {
-        error err = error(COSMOS_DB_ERROR_CODE,
-        { message: "Error occurred while constructing request headers" });
-        return err;
+        return setResponseError(HEADER_CONST_ERROR_MSG);
     } else {
         var httpResponse = self.documentClient->delete(requestPath, request);
         if (httpResponse is http:Response) {
@@ -682,6 +658,7 @@ public remote function Client.deleteDocument(string databaseId, string collectio
 }
 
 # CosmosDB Connector configurations can be setup here.
+#
 # + baseURL - The base url of the Cosmos DB account
 # + masterKey - The master key of your account
 # + clientConfig - Client endpoint configurations provided by the user
